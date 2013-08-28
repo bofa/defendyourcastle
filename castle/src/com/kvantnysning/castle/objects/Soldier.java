@@ -5,13 +5,11 @@ import android.graphics.Canvas;
 
 public class Soldier implements Graphics {
 
-	
-	
 	Bitmap bitmap;
 	
 	protected static final double damageMultiplyer = 1;
 	protected static final double g = 10;
-	
+	protected static final double radius = 40;
 	
 	protected double walkSpeed;
 	
@@ -90,6 +88,10 @@ public class Soldier implements Graphics {
 		this.vx = vx;
 		this.vy = vy;
 		
+	}
+	
+	public boolean isClicked(double x, double y){
+		return Math.sqrt( (px-x)*(px-x) + (py-y)*(py-y)) > radius;
 	}
 	
 }
