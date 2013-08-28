@@ -57,13 +57,6 @@ public class MainThread extends Thread {
 		
 		while (running) {
 			
-			
-			doGameUpdate();
-			
-			
-			
-			
-			
 			canvas = null;
 			// try locking the canvas for exclusive pixel editing
 			// in the surface
@@ -106,13 +99,6 @@ public class MainThread extends Thread {
 				}
 			}	// end finally
 		}
-	}
-
-	private void doGameUpdate() {
-		
-		
-		
-		
 	}
 	
 }

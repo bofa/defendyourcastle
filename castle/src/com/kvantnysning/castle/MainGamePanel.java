@@ -3,6 +3,10 @@
  */
 package com.kvantnysning.castle;
 
+import java.util.ArrayList;
+
+import com.kvantnysning.castle.objects.Soldier;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -24,21 +28,27 @@ public class MainGamePanel extends SurfaceView implements
 	private static final String TAG = MainGamePanel.class.getSimpleName();
 	
 	private MainThread thread;
-	private Droid droid;
+	
+	private ArrayList<Soldier> soldiers = new ArrayList<Soldier>();
 
 	public MainGamePanel(Context context) {
 		super(context);
 		// adding the callback (this) to the surface holder to intercept events
 		getHolder().addCallback(this);
-
-		// create droid and load bitmap
-		droid = new Droid(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), 50, 50);
 		
 		// create the game loop thread
 		thread = new MainThread(getHolder(), this);
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
+		
+		//TODO Test av soldater
+		soldiers.add(new Soldier(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), 0, 0, 10));
+		soldiers.add(new Soldier(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), 0, 0, 20));
+		soldiers.add(new Soldier(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), 0, 0, 30));
+		
+		soldiers.get(0).setThrow(0, 0, 0, 0);
+		
 	}
 
 	@Override
@@ -73,36 +83,40 @@ public class MainGamePanel extends SurfaceView implements
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			// delegating event handling to the droid
-			droid.handleActionDown((int)event.getX(), (int)event.getY());
-			
-			// check if in the lower part of the screen we exit
-			if (event.getY() > getHeight() - 50) {
-				thread.setRunning(false);
-				((Activity)getContext()).finish();
-			} else {
-				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-			}
-		} if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			// the gestures
-			if (droid.isTouched()) {
-				// the droid was picked up and is being dragged
-				droid.setX((int)event.getX());
-				droid.setY((int)event.getY());
-			}
-		} if (event.getAction() == MotionEvent.ACTION_UP) {
-			// touch was released
-			if (droid.isTouched()) {
-				droid.setTouched(false);
-			}
-		}
+//		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//			// delegating event handling to the droid
+//			droid.handleActionDown((int)event.getX(), (int)event.getY());
+//			
+//			// check if in the lower part of the screen we exit
+//			if (event.getY() > getHeight() - 50) {
+//				thread.setRunning(false);
+//				((Activity)getContext()).finish();
+//			} else {
+//				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
+//			}
+//		} if (event.getAction() == MotionEvent.ACTION_MOVE) {
+//			// the gestures
+//			if (droid.isTouched()) {
+//				// the droid was picked up and is being dragged
+//				droid.setX((int)event.getX());
+//				droid.setY((int)event.getY());
+//			}
+//		} if (event.getAction() == MotionEvent.ACTION_UP) {
+//			// touch was released
+//			if (droid.isTouched()) {
+//				droid.setTouched(false);
+//			}
+//		}
 		return true;
 	}
 
 	public void render(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-		droid.draw(canvas);
+		
+		for(Soldier s : soldiers){
+			s.draw(canvas);
+		}
+	
 	}
 
 	/**
@@ -111,28 +125,11 @@ public class MainGamePanel extends SurfaceView implements
 	 * engine's update method.
 	 */
 	public void update() {
-		// check collision with right wall if heading right
-		if (droid.getSpeed().getxDirection() == Speed.DIRECTION_RIGHT
-				&& droid.getX() + droid.getBitmap().getWidth() / 2 >= getWidth()) {
-			droid.getSpeed().toggleXDirection();
+		
+		for(Soldier s : soldiers){
+			s.update(0.01);
 		}
-		// check collision with left wall if heading left
-		if (droid.getSpeed().getxDirection() == Speed.DIRECTION_LEFT
-				&& droid.getX() - droid.getBitmap().getWidth() / 2 <= 0) {
-			droid.getSpeed().toggleXDirection();
-		}
-		// check collision with bottom wall if heading down
-		if (droid.getSpeed().getyDirection() == Speed.DIRECTION_DOWN
-				&& droid.getY() + droid.getBitmap().getHeight() / 2 >= getHeight()) {
-			droid.getSpeed().toggleYDirection();
-		}
-		// check collision with top wall if heading up
-		if (droid.getSpeed().getyDirection() == Speed.DIRECTION_UP
-				&& droid.getY() - droid.getBitmap().getHeight() / 2 <= 0) {
-			droid.getSpeed().toggleYDirection();
-		}
-		// Update the lone droid
-		droid.update();
+		
 	}
 
 }
