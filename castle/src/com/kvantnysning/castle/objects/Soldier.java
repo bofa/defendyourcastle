@@ -7,9 +7,9 @@ public class Soldier implements Graphics {
 
 	Bitmap bitmap;
 	
-	protected static final double damageMultiplyer = 1;
-	protected static final double g = 10;
-	protected static final double radius = 40;
+	protected static final double damageMultiplyer = 0.05;
+	protected static final double g = 30;
+	protected static final double radius = 100;
 	
 	protected double walkSpeed;
 	
@@ -94,7 +94,7 @@ public class Soldier implements Graphics {
 	}
 	
 	public boolean isClicked(double x, double y){
-		return Math.sqrt( (px-x)*(px-x) + (py-y)*(py-y)) > radius;
+		return Math.sqrt( (px-x)*(px-x) + (py-y)*(py-y)) < radius;
 	}
 	
 }
