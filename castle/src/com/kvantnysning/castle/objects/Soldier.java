@@ -42,8 +42,8 @@ public class Soldier implements Graphics {
 		px += Ts*vx;
 		
 		if(!onFloor){
-			py += Ts*vy;
-			vy += g;
+			py += Ts*vy + Ts*Ts/2*g;
+			vy += Ts*g;
 		}
 		
 		if( py>FloorY && vy>0 ){
@@ -75,8 +75,11 @@ public class Soldier implements Graphics {
 	}
 	
 	public void setPosition(double x, double y){
+		
 		px = x;
 		py = y;
+		
+		onFloor = false;
 	}
 	
 	public void setThrow(double x, double y, double vx, double vy){
